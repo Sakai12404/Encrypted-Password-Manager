@@ -34,7 +34,8 @@ void main() async {
       case '4':
         // remove
         await uiRemoveFileInformation();
-        stdout.write("Press enter to continue"); stdin.readLineSync();
+        stdout.write("Press enter to continue");
+        stdin.readLineSync();
         clearConsole();
         break;
       case '5':
@@ -98,7 +99,7 @@ Future<void> uiAddToFile() async {
   print(
     "Service using is $service, username is $username, password is $password",
   );
-  await addToFile(service.toLowerCase(), username.trim(), password.trim());
+  await addToFile("services/${service.toLowerCase()}", username.trim(), password.trim());
   stdout.write("Press enter to continue");
   stdin.readLineSync();
   clearConsole();
@@ -121,7 +122,7 @@ Future<String> uiAccessFileInformation() async {
   }
   clearConsole();
   List<Map<String, dynamic>> allInformation = await accessFileInformation(
-    service.toLowerCase(),
+    "services/${service.toLowerCase()}",
   );
   for (var i in allInformation) {
     print("Username: ${i["username"]}, Password: ${i["password"]}");
@@ -148,19 +149,35 @@ Future<void> uiUpdateFileInformation() async {
     }
   }
   clearConsole();
-  if (! await File("$service.json").exists()) { print("You don't have any information fot that service"); return; }
+  if (!await File("$service.json").exists()) {
+    print("You don't have any information fot that service");
+    return;
+  }
   List<Map<String, dynamic>> allInformation = await accessFileInformation(
-    service.toLowerCase()
+    "services/${service.toLowerCase()}",
   );
   for (int i = 0; i < allInformation.length; i++) {
-    print("#${i+1} Username: ${allInformation[i]["username"]}, Password: ${allInformation[i]["password"]}");
+    print(
+      "#${i + 1} Username: ${allInformation[i]["username"]}, Password: ${allInformation[i]["password"]}",
+    );
   }
-  stdout.write("Which position do you want to replace by number: "); String? indexReplacing = stdin.readLineSync();
-  while (true){
-    stdout.write("Is #$indexReplacing correct, yes(1) no(2): "); String? correct = stdin.readLineSync();
-    if (correct == '1' && indexReplacing != null && int.tryParse(indexReplacing) is int && 0 < int.parse(indexReplacing) && allInformation.length >= int.parse(indexReplacing)) { break;}
-    else if (correct == '2') { stdout.write("Which set do you want to replace by number: "); indexReplacing = stdin.readLineSync();}
-    else { print("Invalid input try again"); }
+  stdout.write("Which position do you want to replace by number: ");
+  String? indexReplacing = stdin.readLineSync();
+  while (true) {
+    stdout.write("Is #$indexReplacing correct, yes(1) no(2): ");
+    String? correct = stdin.readLineSync();
+    if (correct == '1' &&
+        indexReplacing != null &&
+        int.tryParse(indexReplacing) is int &&
+        0 < int.parse(indexReplacing) &&
+        allInformation.length >= int.parse(indexReplacing)) {
+      break;
+    } else if (correct == '2') {
+      stdout.write("Which set do you want to replace by number: ");
+      indexReplacing = stdin.readLineSync();
+    } else {
+      print("Invalid input try again");
+    }
   }
   clearConsole();
   print("Service using is $service, placement in list = $indexReplacing");
@@ -179,7 +196,9 @@ Future<void> uiUpdateFileInformation() async {
     }
   }
   clearConsole();
-  print("Service using is $service, placement in list = $indexReplacing, username is $username");
+  print(
+    "Service using is $service, placement in list = $indexReplacing, username is $username",
+  );
   stdout.write("What is your password: ");
   String? password = stdin.readLineSync();
   while (true) {
@@ -198,13 +217,19 @@ Future<void> uiUpdateFileInformation() async {
   print(
     "Service using is $service, placement in list = $indexReplacing, username is $username, password is $password",
   );
-  await updateFileInformation(service.toLowerCase(),int.parse(indexReplacing)-1,username,password);
+  await updateFileInformation(
+    "services/${service.toLowerCase()}",
+    int.parse(indexReplacing) - 1,
+    username,
+    password,
+  );
   print("New information for $service: ");
-  allInformation = await accessFileInformation(service.toLowerCase());
+  allInformation = await accessFileInformation("services/${service.toLowerCase()}");
   for (var i in allInformation) {
     print("Username: ${i["username"]}, Password: ${i["password"]}");
   }
-  stdout.write("Press enter to continue"); stdin.readLineSync();
+  stdout.write("Press enter to continue");
+  stdin.readLineSync();
 }
 
 Future<void> uiRemoveFileInformation() async {
@@ -223,23 +248,44 @@ Future<void> uiRemoveFileInformation() async {
     }
   }
   clearConsole();
-  List<Map<String,dynamic>> allInformation = await accessFileInformation(service);
-  if (allInformation.isEmpty) { return; }
+  List<Map<String, dynamic>> allInformation = await accessFileInformation(
+    service,
+  );
+  if (allInformation.isEmpty) {
+    return;
+  }
   print("Service using is $service");
   for (int i = 0; i < allInformation.length; i++) {
-    print("#${i+1} Username: ${allInformation[i]["username"]}, Password: ${allInformation[i]["password"]}");
+    print(
+      "#${i + 1} Username: ${allInformation[i]["username"]}, Password: ${allInformation[i]["password"]}",
+    );
   }
-  stdout.write("Which position do you want to replace by number: "); String? indexRemoving = stdin.readLineSync();
-  while (true){
-    stdout.write("Is #$indexRemoving correct, yes(1) no(2): "); String? correct = stdin.readLineSync();
-    if (correct == '1' && indexRemoving != null && int.tryParse(indexRemoving) is int && 0 < int.parse(indexRemoving) && allInformation.length >= int.parse(indexRemoving)) { break;}
-    else if (correct == '2') { stdout.write("Which set do you want to replace by number: "); indexRemoving = stdin.readLineSync();}
-    else { print("Invalid input try again"); }
+  stdout.write("Which position do you want to replace by number: ");
+  String? indexRemoving = stdin.readLineSync();
+  while (true) {
+    stdout.write("Is #$indexRemoving correct, yes(1) no(2): ");
+    String? correct = stdin.readLineSync();
+    if (correct == '1' &&
+        indexRemoving != null &&
+        int.tryParse(indexRemoving) is int &&
+        0 < int.parse(indexRemoving) &&
+        allInformation.length >= int.parse(indexRemoving)) {
+      break;
+    } else if (correct == '2') {
+      stdout.write("Which set do you want to replace by number: ");
+      indexRemoving = stdin.readLineSync();
+    } else {
+      print("Invalid input try again");
+    }
   }
   clearConsole();
-  stdout.write("Press 1 to confrim anything else to cancel: "); String? confirmation = stdin.readLineSync();
-  if (confirmation != '1') { print("Terminating the removal process"); return; }
-  await removeFileInformation(service, int.parse(indexRemoving)-1); 
+  stdout.write("Press 1 to confrim anything else to cancel: ");
+  String? confirmation = stdin.readLineSync();
+  if (confirmation != '1') {
+    print("Terminating the removal process");
+    return;
+  }
+  await removeFileInformation(service, int.parse(indexRemoving) - 1);
   print("Information terminated");
 }
 
@@ -248,58 +294,81 @@ Future<void> removeFileInformation(String fileName, int locatingInList) async {
     fileName,
   );
   currFileData.removeAt(locatingInList);
-  await File("$fileName.json").writeAsString(encryptor(currFileData, await accessIV(fileName)));
+  await File(
+    "$fileName.json",
+  ).writeAsString(encryptor(currFileData, await accessIV(fileName)));
 }
 
-Future<void> updateFileInformation(String fileName,int locatingInList, String newUsername, String newPassword,) async {
-  List<Map<String, dynamic>> currFileData = await accessFileInformation(fileName);
+Future<void> updateFileInformation(
+  String fileName,
+  int locatingInList,
+  String newUsername,
+  String newPassword,
+) async {
+  List<Map<String, dynamic>> currFileData = await accessFileInformation(
+    fileName,
+  );
   currFileData.removeAt(locatingInList);
   currFileData.add({"username": newUsername, "password": newPassword});
-  await File("$fileName.json").writeAsString(encryptor(currFileData, await accessIV(fileName)));
+  await File(
+    "$fileName.json",
+  ).writeAsString(encryptor(currFileData, await accessIV(fileName)));
 }
 
 Future<void> addToFile(
   String fileName,
   String usernameNeededToAdd,
-  String passwordNeededToAdd
+  String passwordNeededToAdd,
 ) async {
   File file = File("$fileName.json");
   if (!await file.exists()) {
-    await file.create(); await addNewIV(fileName);
+    await file.create();
+    print("file made");
+    await addNewIV(fileName);
   }
   List<Map<String, dynamic>> currFileData = await accessFileInformation(
-    fileName
+    fileName,
   );
   Map<String, dynamic> information = {
     "username": usernameNeededToAdd,
     "password": passwordNeededToAdd,
   };
   currFileData.add(information);
-  await file.writeAsString(encryptor(currFileData,await accessIV(fileName)));
+  await file.writeAsString(encryptor(currFileData, await accessIV(fileName)));
 }
+
 Future<IV> accessIV(String service) async {
   File file = File("keys.json");
   String raw = await file.readAsString();
   dynamic decoded = jsonDecode(decryptor(raw, myIV));
-  Map<String,dynamic> loadedData = decoded as Map<String,dynamic>;
-  Map<String,int> finalLoadedData = {};
-  for (var i in loadedData.keys){
+  Map<String, dynamic> loadedData = decoded as Map<String, dynamic>;
+  Map<String, int> finalLoadedData = {};
+  for (var i in loadedData.keys) {
     finalLoadedData[i] = loadedData[i] as int;
   }
   return IV.allZerosOfLength(finalLoadedData[service]!);
 }
+
 Future<void> addNewIV(String service) async {
   File file = File("keys.json");
   String raw = await file.readAsString();
-  Map<String,dynamic> decoded = jsonDecode(decryptor(raw, myIV));
-  Map<String,int> loadedData = {};
-  for (var i in decoded.keys){
-    loadedData[i] = decoded[i];
+  if (raw.isNotEmpty) {
+    Map<String, dynamic> decoded = jsonDecode(decryptor(raw, myIV));
+    Map<String, int> loadedData = {};
+    for (var i in decoded.keys) {
+      loadedData[i] = decoded[i] as int;
+    }
+    loadedData[service] = Random().nextInt(16) + 1;
+    await file.writeAsString(encryptor(loadedData, myIV));
+    return;
   }
-  loadedData[service] = Random().nextInt(16)+1;
-  file.writeAsString(encryptor(loadedData, myIV));
+  Map<String, int> data = {service : Random().nextInt(16)+1};
+  await file.writeAsString(encryptor(data, myIV));
 }
-Future<List<Map<String, dynamic>>> accessFileInformation(String fileName) async {
+
+Future<List<Map<String, dynamic>>> accessFileInformation(
+  String fileName,
+) async {
   File file = File("$fileName.json");
   if (!await file.exists()) {
     print("No information stored for this service");
@@ -310,19 +379,22 @@ Future<List<Map<String, dynamic>>> accessFileInformation(String fileName) async 
   }
 
   String raw = await file.readAsString();
-  List<dynamic> decoded = jsonDecode(decryptor(raw, await accessIV(fileName))); 
+  List<dynamic> decoded = jsonDecode(decryptor(raw, await accessIV(fileName)));
   List<Map<String, dynamic>> loadedData = decoded
       .map((e) => Map<String, dynamic>.from(e))
       .toList();
   return loadedData;
 }
+
 String encryptor(dynamic information, IV iv) {
   String jsonString = jsonEncode(information);
-  return encrypter.encrypt(jsonString,iv:iv).base64;
+  return encrypter.encrypt(jsonString, iv: iv).base64;
 }
+
 String decryptor(String jsonString, IV iv) {
-  return encrypter.decrypt64(jsonString,iv:iv);
+  return encrypter.decrypt64(jsonString, iv: iv);
 }
+
 void clearConsole() {
   print("\r${"\n" * 100}");
 }
