@@ -1,2 +1,3 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+A simple password manager that
+has encryption and a folder that holds the
+files that have passwords held
